@@ -3,7 +3,7 @@ import { User } from './interface/user.interface';
 import { Database } from 'src/database/database';
 import { CreateUserDto } from './dto/create-user.dto';
 import { v4 as uuidv4, validate } from 'uuid';
-import { UpdatePasswordDto } from './dto/update-user.dto';
+import { UpdatePasswordDto } from './dto/update-password.dto';
 
 @Injectable()
 export class UserService {
@@ -25,6 +25,9 @@ export class UserService {
   }
 
   createUser(userDto: CreateUserDto) {
+    if (!userDto?.login || !userDto?.password) {
+      throw new HttpException('Invalid user data.', HttpStatus.BAD_REQUEST);
+    }
     const newUser: User = {
       id: uuidv4(),
       login: userDto.login,
@@ -39,9 +42,13 @@ export class UserService {
     return newUser;
   }
 
-  updateUser(id: string, dto: UpdatePasswordDto): User {
+  updateUser(id: string, userDto: UpdatePasswordDto): User {
     if (!validate(id)) {
       throw new HttpException('Invalid ID.', HttpStatus.BAD_REQUEST);
+    }
+
+    if (!userDto?.newPassword || !userDto?.oldPassword) {
+      throw new HttpException('Invalid user data.', HttpStatus.BAD_REQUEST);
     }
 
     const user = this.database.users.find((user) => user.id === id);
@@ -50,14 +57,14 @@ export class UserService {
       throw new HttpException('User not found.', HttpStatus.NOT_FOUND);
     }
 
-    if (user.password !== dto.oldPassword) {
+    if (user.password !== userDto.oldPassword) {
       throw new HttpException(
         'Old password is incorrect.',
         HttpStatus.FORBIDDEN,
       );
     }
 
-    user.password = dto.newPassword;
+    user.password = userDto.newPassword;
     user.version += 1;
     user.updatedAt = new Date().getTime();
 

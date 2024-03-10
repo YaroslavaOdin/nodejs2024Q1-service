@@ -69,5 +69,17 @@ export class ArtistService {
     this.database.artists = this.database.artists.filter(
       (artist) => artist.id !== removedArtist.id,
     );
+
+    this.database.tracks.forEach((track) => {
+      if (track.artistId === removedArtist.id) {
+        track.artistId = null;
+      }
+    });
+
+    this.database.albums.forEach((album) => {
+      if (album.artistId === removedArtist.id) {
+        album.artistId = null;
+      }
+    });
   }
 }
