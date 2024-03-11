@@ -38,8 +38,10 @@ export class UserService {
     };
 
     this.database.users.push(newUser);
+    const cloneUser = JSON.parse(JSON.stringify(newUser));
+    delete cloneUser.password;
 
-    return newUser;
+    return cloneUser;
   }
 
   updateUser(id: string, userDto: UpdatePasswordDto): User {
@@ -68,7 +70,10 @@ export class UserService {
     user.version += 1;
     user.updatedAt = new Date().getTime();
 
-    return user;
+    const cloneUser = JSON.parse(JSON.stringify(user));
+    delete cloneUser.password;
+
+    return cloneUser;
   }
 
   removeUser(id: string): void {
