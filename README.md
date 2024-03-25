@@ -4,12 +4,14 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
+- Docker - [Download & Install Docker](https://docs.docker.com/engine/install/).
 
 ## Downloading
 
 ```
 git clone https://github.com/YaroslavaOdin/nodejs2024Q1-service
 ```
+Switch to the branch `сontainerization-docker-database`.
 
 ## Installing NPM modules
 
@@ -20,6 +22,19 @@ npm install
 ## Create .env
 
 You can set the port in the file .env. An example can be seen in the .env.example file. Default port - 4000.
+
+## Running application
+Start the docker containers:
+```
+npm run docker:compose
+```
+## Scan for vulnerabilities 
+```
+npm run docker:scan:app
+```
+```
+npm run docker:scan:database
+```
 
 ## Start the server
 
